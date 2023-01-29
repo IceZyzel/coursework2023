@@ -30,7 +30,7 @@ def delete_product(request, pk):
 
 
 def main(request):
-    return render(request, 'main.html', )
+    return render(request, 'main.html', {})
 
 
 class SupplierListView(ListView):
@@ -149,6 +149,26 @@ class SuppliesCreateView(CreateView):
     form_class = SuppliesForm
     success_url = '/supplies/'
 
+
+def supplies_create_view(request):
+    context = {}
+    if "added_products" not in request.session.keys():
+        request.session["added_products"] = []
+    form = SuppliesForm()
+
+    if request.method == "POST" and (form := SuppliesForm(request.POST)).is_valid():
+        pass
+
+    context["form"] = form
+    context["added_products"] = request.session.get("added_products")
+    return render(request, 'add_products_form.html', context)
+
+def supplies_product_create_view(request):
+    context = {}
+
+    
+
+    return render(request, "form.html", context)
 
 class SuppliesUpdateView(UpdateView):
     model = Supplies

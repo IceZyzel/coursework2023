@@ -35,7 +35,7 @@ class CookerForm(forms.ModelForm):
 class SuppliesForm(forms.ModelForm):
     class Meta:
         model = Supplies
-        fields = '__all__'
+        exclude = ["final_price"]
 
 
 class CookerSelectionForm(forms.Form):

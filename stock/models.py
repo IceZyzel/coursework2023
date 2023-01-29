@@ -52,9 +52,6 @@ class SupplierProduct(Model):
     supplier = Supplier
     price = models.FloatField()
 
-    def __str__(self):
-        return self.name
-
 
 class Manager(Model):
     first_name = models.CharField(max_length=64)
@@ -64,6 +61,10 @@ class Manager(Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class SuppliedProduct(Model):
@@ -111,12 +112,17 @@ class Cooker(Model):
     def __str__(self):
         return self.name
 
+    @property
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class StockHistory(models.Model):
     stock = models.ForeignKey(StockProduct, on_delete=models.CASCADE)
     amount = models.IntegerField()
+    initial_amount = models.IntegerField(default=1)
+    final_amount = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
-    rank = models.ForeignKey(CookerRank, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
