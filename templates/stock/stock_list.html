@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h1>Stock List</h1>
+  <a href="{% url 'create_stock' %}">Add Stock</a>
+  <h1></h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Amount</th>
+        <th>Expired At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stock in stocks %}
+        <tr>
+          <td>{{ stock.product }}</td>
+          <td>{{ stock.amount }}</td>
+          <td>{{ stock.expired_at }}</td>
+          <td>
+            <a href="{% url 'update_stock' stock.pk %}">Edit</a>
+            <a href="{% url 'delete_stock' stock.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

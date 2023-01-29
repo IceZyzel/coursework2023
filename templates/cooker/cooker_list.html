@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Cooker List</h1>
+  <a href="{% url 'cooker_create' %}">Add a new cooker</a>
+<h1></h1>
+<a href="{% url 'cooker_select' %}">Take a product</a>
+<h1></h1>
+<a href="{% url 'cooker_product_history' %}">Product history</a>
+<h1></h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Surname</th>
+        <th>Phone</th>
+        <th>Rank</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cooker in cookers %}
+        <tr>
+          <td>{{ cooker.first_name }}</td>
+          <td>{{ cooker.last_name }}</td>
+          <td>{{ cooker.surname }}</td>
+          <td>{{ cooker.phone }}</td>
+          <td>{{ cooker.rank.name }}</td>
+          <td>
+            <a href="{% url 'cooker_update' cooker.pk %}">Edit</a>
+            <a href="{% url 'cooker_delete' cooker.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

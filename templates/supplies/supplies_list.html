@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Supplier List</h1>
+  <a href="{% url 'create_supplies' %}">Create new supply</a>
+    <h1></h1>
+    <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Final Price</th>
+            <th>Products</th>
+            <th>Supplier</th>
+            <th>Manager</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for supply in supplies %}
+          <tr>
+            <td>{{ supply.create_at }}</td>
+            <td>{{ supply.final_price }}</td>
+            <td>
+              {% for product in supply.products.all %}
+              {{ product.name }}
+              {% endfor %}
+            </td>
+            <td>{{ supply.supplier.name }}</td>
+            <td>{{ supply.manager.first_name }}</td>
+            <td>
+              <a href="{% url 'update_supplies' supply.pk %}">Edit</a>
+              <a href="{% url 'delete_supplies' supply.pk %}" >Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  {%endblock%}

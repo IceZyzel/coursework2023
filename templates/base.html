@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{%load static%}
+{% include 'navbar.html' %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

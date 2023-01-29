@@ -1,0 +1,28 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Product History</h1>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Amount before</th>
+<th>Amount</th>
+<th>Remaining Amount</th>
+<th>Taken at</th>
+</tr>
+</thead>
+<tbody>
+{% for item in history %}
+<tr>
+<td>{{ item.stock.product.name }}</td>
+<td>{{ item.total_amount }}</td>
+<td>{{ item.amount }}</td>
+<td>{{ item.stock.amount }}</td>
+<td>{{ item.created_at }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

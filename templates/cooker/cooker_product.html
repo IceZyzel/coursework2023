@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'cooker_product' %}">
+    {% csrf_token %}
+    <label for="stock">Select Stock:</label>
+    <select name="stock" id="stock">
+      {% for stock in stocks %}
+        <option value="{{ stock.id }}">{{ stock.product.name }}</option>
+      {% endfor %}
+    </select>
+    <label for="amount">Amount:</label>
+    <input type="number" name="amount" id="amount" min="1">
+    <input type="submit" value="Submit">
+  </form>
+  {%endblock%}

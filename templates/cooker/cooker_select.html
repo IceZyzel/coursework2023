@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'cooker_select' %}">
+    {% csrf_token %}
+    <label for="cooker">Select Cooker:</label>
+    <select name="cooker" id="cooker">
+        {% for cookers in cookers %}
+        <option value="{{ cookers.id }}" {% if cookers.id == selected_cooker.id %} selected {% endif %}>{{ cookers.first_name }} {{ cookers.last_name }}</option>
+    {% endfor %}
+    </select>
+    <input type="submit" value="Next">
+  </form>
+{%endblock%}  
