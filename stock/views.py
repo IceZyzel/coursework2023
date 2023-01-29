@@ -166,7 +166,7 @@ def supplies_create_view(request):
 def supplies_product_create_view(request):
     context = {}
 
-    
+
 
     return render(request, "form.html", context)
 
@@ -225,9 +225,12 @@ class CookerProductHistoryView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         history = StockHistory.objects.all()
-        for item in history:
-            item.total_amount = item.amount + item.stock.amount
-        for h in history:
-            h.remaining = h.stock.amount - h.amount
+        for i, item in enumerate(history):
+            if i == 0:
+                item.initial_amount = item.stock.amount
+            else:
+                item.initial_amount = history[i - 1].final_amount + item.amount
+            item.final_amount = item.initial_amount - item.amount
         context['history'] = history
         return context
+
