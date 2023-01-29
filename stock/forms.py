@@ -45,3 +45,21 @@ class CookerSelectionForm(forms.Form):
 class CookerProductForm(forms.Form):
     stock = forms.ModelChoiceField(queryset=StockProduct.objects.all())
     amount = forms.IntegerField()
+
+
+class SupplieForm(forms.ModelForm):
+    class Meta:
+        model = Supplies
+        exclude = ['final_price', 'supplier']
+
+
+class SupplierProductForm(forms.ModelForm):
+    class Meta:
+        model = SuppliedProduct
+        exclude = ['id']
+
+    def __init__(self, supplier_id=None, **kwargs):
+        super(SupplierProductForm, self).__init__(**kwargs)
+        if supplier_id:
+            self.fields['product'].queryset = SupplierProduct.objects.filter(supplier_id=supplier_id)
+

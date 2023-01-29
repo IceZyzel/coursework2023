@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import *
 from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView
@@ -150,25 +151,35 @@ class SuppliesCreateView(CreateView):
     success_url = '/supplies/'
 
 
-def supplies_create_view(request):
-    context = {}
-    if "added_products" not in request.session.keys():
-        request.session["added_products"] = []
-    form = SuppliesForm()
+def supplie_view(request, supplier_id: int):
+    if 'products' not in request.session:
+        request.session['products'] = []
 
-    if request.method == "POST" and (form := SuppliesForm(request.POST)).is_valid():
-        pass
-
+    context = {"products": request.session['products']}
+    form = SupplieForm(initial={supplier_id: supplier_id})
+    if request.method == "POST" and (form := SupplieForm(request.POST)).is_valid():
+        suplie: Supplies = form.save(commit=False)
+        suplie.final_price = sum(i.amount * i.product.price for i in context["products"])
+        suplie.save()
+        for i in context["products"]:
+            i.supplie_id = suplie.id
+            i.save()
+        request.session["product"] = []
+        return redirect("home")
     context["form"] = form
-    context["added_products"] = request.session.get("added_products")
-    return render(request, 'add_products_form.html', context)
+    return render(request, '', context)
 
-def supplies_product_create_view(request):
+
+def supplies_product_view(request, supplier_id: int):
     context = {}
+    form = SupplierProductForm(supplier_id=supplier_id)
 
+    if request.method == "POST" and (form := SupplierProductForm(request.POST)).is_valid():
+        request.session['products'].append(form.save())
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    context["form"] = form
+    return render(request, '', context)
 
-
-    return render(request, "form.html", context)
 
 class SuppliesUpdateView(UpdateView):
     model = Supplies
@@ -235,4 +246,3 @@ class CookerProductHistoryView(TemplateView):
             item.final_amount = item.initial_amount - item.amount
         context['history'] = history
         return context
-
