@@ -6,19 +6,31 @@ from django.db.models import Model
 class Measure(Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Product(Model):
     name = models.CharField(max_length=64)
     term = models.IntegerField()
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Payment(Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Delivery(Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
 
 
 class Supplier(Model):
@@ -31,11 +43,17 @@ class Supplier(Model):
     payment_method = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True)
     delivery_method = models.ForeignKey(Delivery, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class SupplierProduct(Model):
     product = Product
     supplier = Supplier
     price = models.FloatField()
+
+    def __str__(self):
+        return self.name
 
 
 class Manager(Model):
@@ -44,10 +62,16 @@ class Manager(Model):
     surname = models.CharField(max_length=64)
     phone = models.CharField(max_length=24)
 
+    def __str__(self):
+        return self.name
+
 
 class SuppliedProduct(Model):
     product = models.ForeignKey(SupplierProduct, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.name
 
 
 class Supplies(Model):
@@ -57,15 +81,24 @@ class Supplies(Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
     manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class StockProduct(Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField()
     expired_at = models.DateField()
 
+    def __str__(self):
+        return self.name
+
 
 class CookerRank(Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
 
 
 class Cooker(Model):
@@ -75,9 +108,15 @@ class Cooker(Model):
     phone = models.CharField(max_length=24)
     rank = models.ForeignKey(CookerRank, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class StockHistory(models.Model):
     stock = models.ForeignKey(StockProduct, on_delete=models.CASCADE)
     amount = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     rank = models.ForeignKey(CookerRank, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.name

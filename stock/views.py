@@ -190,12 +190,12 @@ class CookerProductView(FormView):
         amount = form.cleaned_data['amount']
         stock_model.amount -= amount
         stock_model.save()
-        StockHis.objects.create(stock=stock_model, amount=amount)
+        StockHistory.objects.create(stock=stock_model, amount=amount)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['stocks'] = Stock.objects.all()
+        context['stocks'] = StockHistory.objects.all()
         return context
 
 
