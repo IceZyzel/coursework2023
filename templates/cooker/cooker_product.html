@@ -7,7 +7,7 @@
     <label for="stock">Select Stock:</label>
     <select name="stock" id="stock">
       {% for stock in stocks %}
-        <option value="{{ stock.id }}">{{ stock.product.name }}</option>
+        <option value="{{ stock.id }}">{{ stock.product.name }} - {{stock.amount}}</option>
       {% endfor %}
     </select>
     <label for="amount">Amount:</label>
