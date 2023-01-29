@@ -86,27 +86,27 @@ def delete_manager(request, pk):
 
 
 class StockListView(ListView):
-    model = Stock
+    model = StockProduct
     template_name = 'stock/stock_list.html'
     context_object_name = 'stocks'
 
 
 class StockCreateView(CreateView):
-    model = Stock
+    model = StockProduct
     template_name = 'form.html'
     form_class = StockForm
     success_url = '/stock/'
 
 
 class StockUpdateView(UpdateView):
-    model = Stock
+    model = StockProduct
     template_name = 'form.html'
     form_class = StockForm
     success_url = '/stock/'
 
 
 def delete_stock(request, pk):
-    stock = Stock.objects.get(pk=pk)
+    stock = StockProduct.objects.get(pk=pk)
     stock.delete()
     return redirect('stock')
 
@@ -190,7 +190,7 @@ class CookerProductView(FormView):
         amount = form.cleaned_data['amount']
         stock_model.amount -= amount
         stock_model.save()
-        StockHistory.objects.create(stock=stock_model, amount=amount)
+        StockHis.objects.create(stock=stock_model, amount=amount)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

@@ -11,8 +11,7 @@ class ProductForm(forms.ModelForm):
 class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
-        fields = ['name', 'phone', 'email', 'address', 'iban', 'rating', 'payment_method', 'delivery_method',
-                  'products']
+        exclude = ['id']
 
 
 class ManagerForm(forms.ModelForm):
@@ -23,7 +22,7 @@ class ManagerForm(forms.ModelForm):
 
 class StockForm(forms.ModelForm):
     class Meta:
-        model = Stock
+        model = StockProduct
         fields = ['product', 'amount', 'expired_at']
 
 
@@ -44,5 +43,5 @@ class CookerSelectionForm(forms.Form):
 
 
 class CookerProductForm(forms.Form):
-    stock = forms.ModelChoiceField(queryset=Stock.objects.all())
+    stock = forms.ModelChoiceField(queryset=StockProduct.objects.all())
     amount = forms.IntegerField()
