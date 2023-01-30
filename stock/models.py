@@ -97,6 +97,10 @@ class Supplies(Model):
     def name(self):
         return f"{self.create_at}: {self.final_price}"
 
+    @property
+    def products(self):
+        return SuppliedProduct.objects.filter(suplie=self)
+
 
 class StockProduct(Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

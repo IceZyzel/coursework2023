@@ -167,6 +167,7 @@ def supplie_create_view(request, supplier_id: int):
     if request.method == "POST" and (form := SupplieForm(request.POST)).is_valid():
         suplie: Supplies = form.save(commit=False)
         suplie.final_price = sum(i.amount * i.product.price for i in context["products"])
+        suplie.supplier_id = supplier_id
         suplie.save()
         for p in context["products"]:
             p.suplie = suplie

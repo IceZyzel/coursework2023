@@ -18,11 +18,11 @@
             <td>{{ supply.create_at }}</td>
             <td>{{ supply.final_price }}</td>
             <td>
-              {% for product in supply.products.all %}
+              {% for product in supply.products %}
               {{ product.name }}
               {% endfor %}
             </td>
-            <td>{{ supply.supplier.name }}</td>
+            <td>{{ supply.supplier }}</td>
             <td>{{ supply.manager.first_name }}</td>
             <td>
               <a href="{% url 'update_supplies' supply.pk %}">Edit</a>
