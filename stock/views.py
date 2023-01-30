@@ -208,6 +208,8 @@ def supplies_product_view(request, supplier_id: int):
     context["form"] = form
     return render(request, 'form.html', context)
 
+def automatic_buy(request):
+    pass
 
 class SuppliesUpdateView(UpdateView):
     model = Supplies
@@ -244,6 +246,7 @@ class CookerProductView(FormView):
     form_class = CookerProductForm
     success_url = '/cooker/'
 
+
     def form_valid(self, form):
         stock_model = form.cleaned_data['stock']
         amount = form.cleaned_data['amount']
@@ -258,6 +261,16 @@ class CookerProductView(FormView):
         context = super().get_context_data(**kwargs)
         context['stocks'] = StockProduct.objects.all()
         return context
+
+    def post(self, request, *args, **kwargs):
+        if (form := CookerProductForm(request.POST)).is_valid():
+            stock, amount = form.cleaned_data["stock"], form.cleaned_data["amount"]
+            stock: StockProduct
+            print(stock, amount)
+            if stock.amount - amount  < 0:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        return super().post(self, request, *args, **kwargs)
 
 
 
