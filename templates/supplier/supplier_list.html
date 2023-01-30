@@ -37,6 +37,7 @@
           <td>
             <a href="{% url 'supplier_update' supplier.pk %}">Edit</a>
             <a href="{% url 'supplier_delete' supplier.pk %}">Delete</a>
+              <a href={% url 'create_supplies' supplier.id %}>Add suplie</a>
           </td>
         </tr>
       {% endfor %}

@@ -165,11 +165,11 @@ class SuppliesCreateView(CreateView):
     success_url = '/supplies/'
 
 
-def supplie_view(request, supplier_id: int):
+def supplie_create_view(request, supplier_id: int):
     if 'products' not in request.session:
         request.session['products'] = []
 
-    context = {"products": request.session['products']}
+    context = {"products": request.session['products'], "supplier_id": supplier_id}
     form = SupplieForm(initial={supplier_id: supplier_id})
     if request.method == "POST" and (form := SupplieForm(request.POST)).is_valid():
         suplie: Supplies = form.save(commit=False)
@@ -179,20 +179,20 @@ def supplie_view(request, supplier_id: int):
             i.supplie_id = suplie.id
             i.save()
         request.session["product"] = []
-        return redirect("home")
+        return redirect("supplier")
     context["form"] = form
-    return render(request, '', context)
+    return render(request, 'add_products_form.html', context)
 
 
 def supplies_product_view(request, supplier_id: int):
     context = {}
     form = SupplierProductForm(supplier_id=supplier_id)
 
-    if request.method == "POST" and (form := SupplierProductForm(request.POST)).is_valid():
+    if request.method == "POST" and (form := SupplierProductForm(supplier_id, request.POST)).is_valid():
         request.session['products'].append(form.save())
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     context["form"] = form
-    return render(request, '', context)
+    return render(request, 'form.html', context)
 
 
 class SuppliesUpdateView(UpdateView):

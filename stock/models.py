@@ -48,9 +48,12 @@ class Supplier(Model):
 
 
 class SupplierProduct(Model):
-    product = Product
-    supplier = Supplier
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True)
     price = models.FloatField()
+
+    def __str__(self):
+        return f"{self.product.name}"
 
 
 class Manager(Model):
@@ -70,9 +73,6 @@ class Manager(Model):
 class SuppliedProduct(Model):
     product = models.ForeignKey(SupplierProduct, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.name
 
 
 class Supplies(Model):
