@@ -1,9 +1,23 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect , HttpResponse
 from django.shortcuts import render, redirect
 from .forms import *
 from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView
-
-
+from .models import *
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import Context
+from io import BytesIO
+from django.views import View
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import Context
+from xhtml2pdf import pisa
+from django.shortcuts import get_object_or_404
 class ProductListView(ListView):
     model = Product
     template_name = 'product/product_list.html'
@@ -220,10 +234,11 @@ class CookerProductView(FormView):
         stock_model = form.cleaned_data['stock']
         amount = form.cleaned_data['amount']
         initial_amount = stock_model.amount
+        final_amount = initial_amount - amount
         stock_model.amount -= amount
         stock_model.save()
-        StockHistory.objects.create(stock=stock_model, amount=amount, initial_amount=initial_amount, final_amount=stock_model.amount)
-        return super().form_valid(form)
+        StockHistory.objects.create(stock=stock_model, amount=amount, initial_amount=initial_amount, final_amount=final_amount)
+        return redirect('cooker_product_history')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -237,12 +252,10 @@ class CookerProductHistoryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        history = StockHistory.objects.all()
-        for i, item in enumerate(history):
-            if i == 0:
-                item.initial_amount = item.stock.amount
-            else:
-                item.initial_amount = history[i - 1].final_amount + item.amount
-            item.final_amount = item.initial_amount - item.amount
+        history = StockHistory.objects.all().order_by('-created_at')
         context['history'] = history
         return context
+
+
+
+
