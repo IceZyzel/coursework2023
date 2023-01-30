@@ -86,6 +86,7 @@ class SuppliedProduct(Model):
 class Supplies(Model):
     create_at = models.DateField(auto_now=True)
     final_price = models.IntegerField()
+    realised = models.BooleanField(default=False)
 
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
     manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True)

@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpResponseRedirect , HttpResponse
 from django.shortcuts import render, redirect
 from .forms import *
@@ -178,6 +180,22 @@ def supplie_create_view(request, supplier_id: int):
     context["form"] = form
     return render(request, 'add_products_form.html', context)
 
+
+def realise_suplie(request, suplie_id: int):
+    suplie = Supplies.objects.get(id=suplie_id)
+    if suplie.realised:
+        return redirect('supplies')
+
+    products = SuppliedProduct.objects.filter(suplie_id=suplie_id)
+    for product in products:
+        new_stock_product = StockProduct(
+            amount=product.amount, product=product.product.product,
+            expired_at=datetime.date.today() + datetime.timedelta(days=product.product.product.term))
+        new_stock_product.save()
+
+    suplie.realised = True
+    suplie.save()
+    return redirect('stock')
 
 def supplies_product_view(request, supplier_id: int):
     context = {}

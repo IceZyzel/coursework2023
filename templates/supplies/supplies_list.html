@@ -27,6 +27,9 @@
             <td>
               <a href="{% url 'update_supplies' supply.pk %}">Edit</a>
               <a href="{% url 'delete_supplies' supply.pk %}" >Delete</a>
+                {% if not supply.realised %}
+                <a href={% url 'realise_suplie' supply.pk %}>Realise</a>
+                {% endif %}
             </td>
           </tr>
           {% endfor %}

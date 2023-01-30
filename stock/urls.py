@@ -24,6 +24,7 @@ urlpatterns = [
     path('cookers/<int:pk>/update/', CookerUpdateView.as_view(), name='cooker_update'),
     path('cookers/<int:pk>/delete/', delete_cooker, name='cooker_delete'),
     path('supplies/', SuppliesListView.as_view(), name='supplies'),
+    path('suplies/<int:suplie_id>/realise', realise_suplie, name='realise_suplie'),
     path('supplier/<int:supplier_id>/supplies_create/', supplie_create_view, name='create_supplies'),
     path("supplier/<int:supplier_id>/supplies_create/add_product", supplies_product_view, name='add_create_supplies'),
     path('supplies/update/<int:pk>/', SuppliesUpdateView.as_view(), name='update_supplies'),
