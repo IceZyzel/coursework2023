@@ -208,8 +208,22 @@ def supplies_product_view(request, supplier_id: int):
     context["form"] = form
     return render(request, 'form.html', context)
 
-def automatic_buy(request):
-    pass
+def automatic_buy(request, stock: StockProduct, amount: int):
+    last_suplie = SuppliedProduct.objects.filter(product__product=stock.product).order_by("id").last()
+    print("Last Suplie: ", last_suplie.id)
+    add_amount = stock.amount * 1.5
+    new_suplie = Supplies(
+        final_price=add_amount * last_suplie.product.price,
+        supplier=last_suplie.suplie.supplier,
+        manager=last_suplie.suplie.manager,
+    )
+    new_suplie.save()
+    new_products = SuppliedProduct(
+        product=last_suplie.product,
+        amount=add_amount,
+        suplie=new_suplie
+    )
+    new_products.save()
 
 class SuppliesUpdateView(UpdateView):
     model = Supplies
@@ -266,9 +280,13 @@ class CookerProductView(FormView):
         if (form := CookerProductForm(request.POST)).is_valid():
             stock, amount = form.cleaned_data["stock"], form.cleaned_data["amount"]
             stock: StockProduct
-            print(stock, amount)
-            if stock.amount - amount  < 0:
+            after_amount = stock.amount - amount
+            if after_amount < 0:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            all_amount_of_product = StockProduct.objects.filter(product=stock.product).aggregate(sum=models.Sum('amount'))["sum"]
+            print(all_amount_of_product)
+            if all_amount_of_product - amount < all_amount_of_product * 0.95:
+                automatic_buy(request, stock, amount)
 
         return super().post(self, request, *args, **kwargs)
 

@@ -50,7 +50,7 @@ class CookerProductForm(forms.Form):
 class SupplieForm(forms.ModelForm):
     class Meta:
         model = Supplies
-        exclude = ['final_price', 'supplier']
+        exclude = ['final_price', 'supplier', 'realised']
 
 
 class SupplierProductForm(forms.ModelForm):
