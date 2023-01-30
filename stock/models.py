@@ -144,6 +144,5 @@ class StockHistory(models.Model):
     initial_amount = models.IntegerField(default=1)
     final_amount = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return self.stock.name

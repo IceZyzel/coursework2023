@@ -1,9 +1,9 @@
 import datetime
-
+from django.db.models import Sum, Count,Avg
 from django.http import HttpResponseRedirect , HttpResponse
 from django.shortcuts import render, redirect
 from .forms import *
-from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView, View
 from .models import *
 from django.shortcuts import render
 from django.http import FileResponse
@@ -333,5 +333,28 @@ def download_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="product_history.pdf"'
     return response
 
+def statistics_view(request):
+    # 1. Total amount of each product
+    total_amount = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount'))
 
+    # 2. Average usage of each product over a certain period
+    average_usage = StockHistory.objects.all().aggregate(Avg('amount'))
+
+    # 3. Top 5 most popular products
+    top_5_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('-sum')[:5]
+
+    # 4. Top 5 least popular products
+    top_5_least_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('sum')[:5]
+
+    # 5. Top 5 suppliers by rating
+    top_5_suppliers = Supplier.objects.all().order_by('-rating')[:5]
+
+    context = {
+        'total_amount': total_amount,
+        'average_usage': average_usage,
+        'top_5_popular': top_5_popular,
+        'top_5_least_popular': top_5_least_popular,
+        'top_5_suppliers': top_5_suppliers,
+    }
+    return render(request, 'statistics.html', context)
 

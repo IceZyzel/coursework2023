@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+  <head>
+    <title>Product Statistics</title>
+  </head>
+  <body>
+    <h1>Product Statistics</h1>
+
+    <h2>Average Usage of Each Product</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Average Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>All Products</td>
+          <td>{{ average_usage.amount__avg }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Top 5 Most Popular Products</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Total Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in top_5_popular %}
+        <tr>
+          <td>{{ product.stock.product.name }}</td>
+          <td>{{ product.sum }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    
+    <h2>Top 5 Least Popular Products</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Total Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in top_5_least_popular %}
+        <tr>
+          <td>{{ product.stock.product.name }}</td>
+          <td>{{ product.sum }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  <h2>Top 5 Suppliers</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Supplier</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in top_5_suppliers %}
+        <tr>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.rating }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

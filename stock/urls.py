@@ -33,4 +33,5 @@ urlpatterns = [
     path('cooker/product/', CookerProductView.as_view(), name='cooker_product'),
     path('cooker/history/', CookerProductHistoryView.as_view(), name='cooker_product_history'),
     path('download/pdf/', download_pdf, name='download_pdf'),
+    path('statistics/', statistics_view, name='statistics'),
      ]
