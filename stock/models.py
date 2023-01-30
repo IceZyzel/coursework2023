@@ -73,6 +73,14 @@ class Manager(Model):
 class SuppliedProduct(Model):
     product = models.ForeignKey(SupplierProduct, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
+    suplie = models.ForeignKey("Supplies", null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
+        return f"{self.product.product.name}: {self.amount}"
 
 
 class Supplies(Model):
@@ -85,6 +93,10 @@ class Supplies(Model):
     def __str__(self):
         return self.name
 
+    @property
+    def name(self):
+        return f"{self.create_at}: {self.final_price}"
+
 
 class StockProduct(Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -93,6 +105,10 @@ class StockProduct(Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def name(self):
+        return f"{self.product.name}"
 
 
 class CookerRank(Model):

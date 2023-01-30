@@ -56,10 +56,10 @@ class SupplieForm(forms.ModelForm):
 class SupplierProductForm(forms.ModelForm):
     class Meta:
         model = SuppliedProduct
-        exclude = ['id']
+        exclude = ['id', "suplie"]
 
-    def __init__(self, supplier_id=None, **kwargs):
-        super(SupplierProductForm, self).__init__(**kwargs)
+    def __init__(self, supplier_id=None, *args):
+        super(SupplierProductForm, self).__init__(*args)
         if supplier_id:
             self.fields['product'].queryset = SupplierProduct.objects.filter(supplier_id=supplier_id)
 

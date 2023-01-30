@@ -159,17 +159,20 @@ class SuppliesCreateView(CreateView):
 def supplie_create_view(request, supplier_id: int):
     if 'products' not in request.session:
         request.session['products'] = []
-
-    context = {"products": request.session['products'], "supplier_id": supplier_id}
+        request.session.save()
+    print(request.session.items())
+    p_ids = request.session["products"]
+    context = {"products": SuppliedProduct.objects.filter(id__in=p_ids), "supplier_id": supplier_id}
     form = SupplieForm(initial={supplier_id: supplier_id})
     if request.method == "POST" and (form := SupplieForm(request.POST)).is_valid():
         suplie: Supplies = form.save(commit=False)
         suplie.final_price = sum(i.amount * i.product.price for i in context["products"])
         suplie.save()
-        for i in context["products"]:
-            i.supplie_id = suplie.id
-            i.save()
-        request.session["product"] = []
+        for p in context["products"]:
+            p.suplie = suplie
+            p.save()
+        request.session["products"] = []
+        request.session.save()
         return redirect("supplier")
     context["form"] = form
     return render(request, 'add_products_form.html', context)
@@ -178,10 +181,11 @@ def supplie_create_view(request, supplier_id: int):
 def supplies_product_view(request, supplier_id: int):
     context = {}
     form = SupplierProductForm(supplier_id=supplier_id)
-
     if request.method == "POST" and (form := SupplierProductForm(supplier_id, request.POST)).is_valid():
-        request.session['products'].append(form.save())
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        supl_product = form.save()
+        request.session['products'].append(supl_product.id)
+        request.session.save()
+        return redirect('create_supplies', supplier_id)
     context["form"] = form
     return render(request, 'form.html', context)
 
