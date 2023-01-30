@@ -4,7 +4,9 @@
 {% block content %}
 
 <h1>Product History</h1>
-
+<form action="{% url 'download_pdf' %}" method="get">
+    <input type="submit" value="Download PDF">
+</form>
 <table>
 <thead>
 <tr>

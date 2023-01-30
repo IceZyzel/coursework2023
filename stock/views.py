@@ -4,20 +4,11 @@ from .forms import *
 from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView
 from .models import *
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template.loader import get_template
-from django.template import Context
-from io import BytesIO
-from django.views import View
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.http import FileResponse
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template.loader import get_template
-from django.template import Context
-from xhtml2pdf import pisa
-from django.shortcuts import get_object_or_404
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 class ProductListView(ListView):
     model = Product
     template_name = 'product/product_list.html'
@@ -256,6 +247,37 @@ class CookerProductHistoryView(TemplateView):
         context['history'] = history
         return context
 
+def download_pdf(request):
+    # Get the table data from the database
+    history = StockHistory.objects.all().order_by('-created_at')
+
+    # Create the PDF file
+    pdf_file = SimpleDocTemplate("product_history.pdf", pagesize=landscape(letter))
+    table_data = [['Product', 'Amount before', 'Amount', 'Remaining Amount', 'Taken at']]
+    for item in history:
+        table_data.append([
+            item.stock.product.name,
+            item.initial_amount,
+            item.amount,
+            item.final_amount,
+            item.created_at
+        ])
+    table = Table(table_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, -1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    pdf_file.build([table])
+
+    # Create the HttpResponse object with the PDF file
+    response = FileResponse(open('product_history.pdf', 'rb'), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="product_history.pdf"'
+    return response
 
 
 
