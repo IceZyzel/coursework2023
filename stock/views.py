@@ -421,3 +421,33 @@ class SupplierProductUpdateView(UpdateView):
     template_name = 'form.html'
     form_class = SupplierrProductForm
     success_url = '/supplier_products/'
+
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from io import BytesIO
+
+
+
+def generate_pdf(request, pk):
+    supplies = Supplies.objects.get(pk=pk)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{supplies.pk}.pdf"'
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+
+    # Code to generate the PDF content goes here
+
+    p.setFont("Helvetica", 16)
+    p.drawString(100, 750, "Invoice for Supply #" + str(supplies.pk))
+    p.setFont("Helvetica", 14)
+    p.drawString(100, 700, "Supplier: " + supplies.supplier.name)
+    p.drawString(100, 650, "Manager: " + supplies.manager.name)
+    p.drawString(100, 600, "Final Price: " + str(supplies.final_price))
+    p.drawString(100, 550, "Date: " + str(supplies.create_at))
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    return FileResponse(buffer, content_type='application/pdf')
+

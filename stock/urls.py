@@ -37,4 +37,5 @@ urlpatterns = [
     path('supplier_products/', SupplierProductListView.as_view(), name='supplier_product_list'),
     path('supplier_products/create/', SupplierProductCreateView.as_view(), name='supplier_product_create'),
     path('supplier_products/<int:pk>/update/', SupplierProductUpdateView.as_view(), name='supplier_product_update'),
+    path('supplies/<int:pk>/invoice/', generate_pdf, name='generate_invoice'),
      ]
