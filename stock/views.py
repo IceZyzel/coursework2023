@@ -103,20 +103,20 @@ class StockCreateView(CreateView):
     model = StockProduct
     template_name = 'form.html'
     form_class = StockForm
-    success_url = '/stock/'
+    success_url = '/'
 
 
 class StockUpdateView(UpdateView):
     model = StockProduct
     template_name = 'form.html'
     form_class = StockForm
-    success_url = '/stock/'
+    success_url = '/'
 
 
 def delete_stock(request, pk):
     stock = StockProduct.objects.get(pk=pk)
     stock.delete()
-    return redirect('stock')
+    return redirect('/')
 
 
 class CookerListView(ListView):
@@ -195,7 +195,7 @@ def realise_suplie(request, suplie_id: int):
 
     suplie.realised = True
     suplie.save()
-    return redirect('stock')
+    return redirect('')
 
 def supplies_product_view(request, supplier_id: int):
     context = {}
@@ -359,4 +359,38 @@ def statistics_view(request):
     return render(request, 'statistics.html', context)
 
 
+def filter_sort_page(request):
+    products = Product.objects.all()
+    supplier_products = SupplierProduct.objects.all()
+    suppliers = Supplier.objects.all()
+
+    # Filter based on product name
+    if request.GET.get('product_name'):
+        products = products.filter(name__contains=request.GET.get('product_name'))
+        supplier_products = supplier_products.filter(product__in=products)
+
+    # Filter based on supplier name
+    if request.GET.get('supplier_name'):
+        suppliers = suppliers.filter(name__contains=request.GET.get('supplier_name'))
+        supplier_products = supplier_products.filter(supplier__in=suppliers)
+
+    # Sort supplier products by price
+    if request.GET.get('sort_price'):
+        supplier_products = supplier_products.order_by('price')
+
+    # Sort supplier products by product name
+    if request.GET.get('sort_product_name'):
+        supplier_products = supplier_products.order_by('product__name')
+
+    # Sort supplier products by supplier name
+    if request.GET.get('sort_supplier_name'):
+        supplier_products = supplier_products.order_by('supplier__name')
+
+    context = {
+        'products': products,
+        'supplier_products': supplier_products,
+        'suppliers': suppliers,
+    }
+
+    return render(request, 'filter_sort.html', context)
 
