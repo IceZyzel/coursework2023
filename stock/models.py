@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Model
+import datetime
 
 
 class Measure(Model):
@@ -103,6 +104,7 @@ class Supplies(Model):
         return SuppliedProduct.objects.filter(suplie=self)
 
 
+
 class StockProduct(Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField()
@@ -114,6 +116,15 @@ class StockProduct(Model):
     @property
     def name(self):
         return f"{self.product.name}"
+
+    def save(self, *args, **kwargs):
+        if self.amount == 0:
+            self.delete()
+            return
+        if datetime.datetime.now().date() > self.expired_at:
+            self.delete()
+            return
+        super().save(*args, **kwargs)
 
 
 class CookerRank(Model):

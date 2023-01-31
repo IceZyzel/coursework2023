@@ -358,3 +358,5 @@ def statistics_view(request):
     }
     return render(request, 'statistics.html', context)
 
+
+
