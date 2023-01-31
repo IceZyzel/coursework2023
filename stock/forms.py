@@ -68,3 +68,8 @@ class SupplierrProductForm(forms.ModelForm):
     class Meta:
         model = SupplierProduct
         exclude = ['id']
+
+
+class SqlForm(forms.Form):
+    query = forms.CharField(widget=forms.Textarea)
+

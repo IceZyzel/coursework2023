@@ -97,12 +97,11 @@ class Supplies(Model):
 
     @property
     def name(self):
-        return f"{self.create_at}: {self.final_price}"
+        return f"{self.supplier.name} at {self.create_at}: {self.final_price}"
 
     @property
     def products(self):
         return SuppliedProduct.objects.filter(suplie=self)
-
 
 
 class StockProduct(Model):
@@ -116,15 +115,6 @@ class StockProduct(Model):
     @property
     def name(self):
         return f"{self.product.name}"
-
-    def save(self, *args, **kwargs):
-        # if self.amount == 0:
-        #     self.delete()
-        #     return
-        if datetime.datetime.now().date() > self.expired_at:
-            self.delete()
-            return
-        super().save(*args, **kwargs)
 
 
 class CookerRank(Model):

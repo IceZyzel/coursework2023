@@ -22,7 +22,8 @@
       </tr>
     </thead>
     <tbody>
-      {% for stock in stocks %}
+    {% for stock in stocks %}
+          {% if stock.amount > 0 and stock.expired_at > now %}
         <tr>
           <td>{{ stock.product }}</td>
           <td>{{ stock.amount }}</td>
@@ -32,6 +33,7 @@
             <a href="{% url 'delete_stock' stock.pk %}">Delete</a>
           </td>
         </tr>
+          {% endif %}
       {% endfor %}
     </tbody>
   </table>

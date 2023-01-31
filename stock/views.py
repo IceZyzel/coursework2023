@@ -108,6 +108,11 @@ class StockListView(ListView):
         return queryset
 
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = datetime.date.today()
+        return context
+
 class StockCreateView(CreateView):
     model = StockProduct
     template_name = 'form.html'
@@ -217,9 +222,12 @@ def supplies_product_view(request, supplier_id: int):
     context["form"] = form
     return render(request, 'form.html', context)
 
-def automatic_buy(request, stock: StockProduct, amount: int):
+
+def automatic_buy(request, stock: StockProduct):
     last_suplie = SuppliedProduct.objects.filter(product__product=stock.product).order_by("id").last()
-    print("Last Suplie: ", last_suplie.id)
+    if last_suplie is None:
+        return
+    print(last_suplie)
     add_amount = stock.amount * 1.5
     new_suplie = Supplies(
         final_price=add_amount * last_suplie.product.price,
@@ -295,7 +303,7 @@ class CookerProductView(FormView):
             all_amount_of_product = StockProduct.objects.filter(product=stock.product).aggregate(sum=models.Sum('amount'))["sum"]
             print(all_amount_of_product)
             if all_amount_of_product - amount < all_amount_of_product * 0.95:
-                automatic_buy(request, stock, amount)
+                automatic_buy(request, stock)
 
         return super().post(self, request, *args, **kwargs)
 
@@ -351,10 +359,14 @@ def statistics_view(request):
 
     # 3. Top 5 most popular products
     top_5_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('-sum')[:5]
-
+    top_5_popular = [{
+        "stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']
+    } for p in top_5_popular]
     # 4. Top 5 least popular products
     top_5_least_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('sum')[:5]
-
+    top_5_least_popular = [{
+        "stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']
+    } for p in top_5_least_popular]
     # 5. Top 5 suppliers by rating
     top_5_suppliers = Supplier.objects.all().order_by('-rating')[:5]
 
