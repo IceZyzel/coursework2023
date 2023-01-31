@@ -6,6 +6,33 @@
     <title>Product Statistics</title>
   </head>
   <body>
+
+    <h1>Product Sql Query</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Query">
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            {% for head in heads %}
+                <th>{{ head.0 }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+    <tbody>
+    {% for body in bodies %}
+        <tr>
+        {% for date in body %}
+            <td>{{ date }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
     <h1>Product Statistics</h1>
 
     <h2>Average Usage of Each Product</h2>

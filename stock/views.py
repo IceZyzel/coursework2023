@@ -1,12 +1,12 @@
 import datetime
-from django.db.models import Sum, Count,Avg
-from django.http import HttpResponseRedirect , HttpResponse
-from django.shortcuts import render, redirect
+from django.db.models import Sum, Avg
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect
 from .forms import *
 from django.views.generic import ListView, CreateView, UpdateView, FormView, TemplateView, View
 from .models import *
-from django.shortcuts import render
-from django.http import FileResponse
+from django.db import connection
+
 from django.shortcuts import render
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
@@ -376,9 +376,25 @@ def statistics_view(request):
         'top_5_popular': top_5_popular,
         'top_5_least_popular': top_5_least_popular,
         'top_5_suppliers': top_5_suppliers,
+        **raw_query(request)
     }
     return render(request, 'statistics.html', context)
 
+
+def raw_query(request):
+    context = {"heads": [], "bodies": []}
+    form = SqlForm()
+
+    if request.method == "POST" and (form := SqlForm(request.POST)).is_valid():
+        print(form.cleaned_data['query'])
+        with connection.cursor() as cursor:
+            cursor.execute(form.cleaned_data['query'])
+            context['heads'] = cursor.description
+            context['bodies'] = cursor.fetchall()
+
+    context['form'] = form
+
+    return context
 
 def filter_sort_page(request):
     products = Product.objects.all()
