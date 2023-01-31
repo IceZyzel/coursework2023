@@ -25,6 +25,7 @@
             <td>{{ supply.supplier }}</td>
             <td>{{ supply.manager.first_name }}</td>
             <td>
+              <a href="{% url 'generate_invoice' supply.pk %}" class="btn btn-primary">Download Invoice</a>
               <a href="{% url 'update_supplies' supply.pk %}">Edit</a>
               <a href="{% url 'delete_supplies' supply.pk %}" >Delete</a>
                 {% if not supply.realised %}

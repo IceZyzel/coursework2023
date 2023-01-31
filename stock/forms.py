@@ -14,6 +14,7 @@ class SupplierForm(forms.ModelForm):
         exclude = ['id']
 
 
+
 class ManagerForm(forms.ModelForm):
     class Meta:
         model = Manager
@@ -63,3 +64,7 @@ class SupplierProductForm(forms.ModelForm):
         if supplier_id:
             self.fields['product'].queryset = SupplierProduct.objects.filter(supplier_id=supplier_id)
 
+class SupplierrProductForm(forms.ModelForm):
+    class Meta:
+        model = SupplierProduct
+        exclude = ['id']

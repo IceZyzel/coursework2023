@@ -1,5 +1,5 @@
 <div style="display: flex; flex-wrap: nowrap;">
-    <a href='/'>
+    <a href="{% url 'stock'%}">
     <h1>ГЛАВНАЯ</h1>
 </a>
 <a href="{% url 'product' %}">
@@ -11,14 +11,17 @@
 <a href="{% url 'manager'%}">
     <h1>МЕНЕДЖЕР</h1>
 </a>
-<a href="{% url 'stock'%}">
-    <h1>СКЛАД</h1>
+<a href="{% url 'filter'%}">
+    <h1>FILTER</h1>
 </a>
 <a href="{% url 'cooker'%}">
     <h1>ПОВАРА</h1>
 </a>
 <a href="{%url 'supplies'%}">
     <h1>ПОСТАВКИ</h1>
+</a>
+<a href="{%url 'supplier_product_list'%}">
+    <h1>PRODUCT CATALOGE</h1>
 </a>
 <a href="{%url 'statistics'%}">
     <h1>STATISTICS</h1>

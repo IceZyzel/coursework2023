@@ -1,0 +1,46 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<form action="" method="get">
+    <div>
+      <label for="product_name">Product Name:</label>
+      <input type="text" id="product_name" name="product_name">
+    </div>
+    <div>
+      <label for="supplier_name">Supplier Name:</label>
+      <input type="text" id="supplier_name" name="supplier_name">
+    </div>
+    <div>
+      <label for="sort_price">Sort by Price:</label>
+      <input type="radio" id="sort_price" name="sort_price" value="price">
+    </div>
+    <div>
+      <label for="sort_product_name">Sort by Product Name:</label>
+      <input type="radio" id="sort_product_name" name="sort_product_name" value="product_name">
+    </div>
+    <div>
+      <label for="sort_supplier_name">Sort by Supplier Name:</label>
+      <input type="radio" id="sort_supplier_name" name="sort_supplier_name" value="supplier_name">
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Supplier Name</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier_product in supplier_products %}
+      <tr>
+        <td>{{ supplier_product.product.name }}</td>
+        <td>{{ supplier_product.supplier.name }}</td>
+        <td>{{ supplier_product.price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{%endblock%}
