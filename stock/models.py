@@ -118,9 +118,9 @@ class StockProduct(Model):
         return f"{self.product.name}"
 
     def save(self, *args, **kwargs):
-        if self.amount == 0:
-            self.delete()
-            return
+        # if self.amount == 0:
+        #     self.delete()
+        #     return
         if datetime.datetime.now().date() > self.expired_at:
             self.delete()
             return
