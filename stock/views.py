@@ -98,6 +98,15 @@ class StockListView(ListView):
     template_name = 'stock/stock_list.html'
     context_object_name = 'stocks'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sort = self.request.GET.get('sort', '')
+        if sort == 'amount_asc':
+            queryset = queryset.order_by('amount')
+        elif sort == 'amount_desc':
+            queryset = queryset.order_by('-amount')
+        return queryset
+
 
 class StockCreateView(CreateView):
     model = StockProduct
@@ -394,3 +403,21 @@ def filter_sort_page(request):
 
     return render(request, 'filter_sort.html', context)
 
+class SupplierProductListView(ListView):
+    model = SupplierProduct
+    template_name = 'supplier_product_list.html'
+    context_object_name = 'supplier_products'
+
+
+class SupplierProductCreateView(CreateView):
+    model = SupplierProduct
+    template_name = 'form.html'
+    form_class = SupplierrProductForm
+    success_url = '/supplier_products/'
+
+
+class SupplierProductUpdateView(UpdateView):
+    model = SuppliedProduct
+    template_name = 'form.html'
+    form_class = SupplierrProductForm
+    success_url = '/supplier_products/'

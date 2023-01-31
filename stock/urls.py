@@ -33,5 +33,8 @@ urlpatterns = [
     path('cooker/history/', CookerProductHistoryView.as_view(), name='cooker_product_history'),
     path('download/pdf/', download_pdf, name='download_pdf'),
     path('statistics/', statistics_view, name='statistics'),
-    path('fulter/',filter_sort_page , name='filter')
+    path('fulter/',filter_sort_page , name='filter'),
+    path('supplier_products/', SupplierProductListView.as_view(), name='supplier_product_list'),
+    path('supplier_products/create/', SupplierProductCreateView.as_view(), name='supplier_product_create'),
+    path('supplier_products/<int:pk>/update/', SupplierProductUpdateView.as_view(), name='supplier_product_update'),
      ]
