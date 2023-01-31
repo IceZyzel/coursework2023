@@ -11,6 +11,8 @@ from django.shortcuts import render
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from itertools import groupby
+from operator import itemgetter
 class ProductListView(ListView):
     model = Product
     template_name = 'product/product_list.html'
@@ -209,7 +211,7 @@ def realise_suplie(request, suplie_id: int):
 
     suplie.realised = True
     suplie.save()
-    return redirect('')
+    return redirect('/')
 
 def supplies_product_view(request, supplier_id: int):
     context = {}
@@ -359,22 +361,31 @@ def statistics_view(request):
 
     # 3. Top 5 most popular products
     top_5_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('-sum')[:5]
-    top_5_popular = [{
-        "stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']
-    } for p in top_5_popular]
+
+    top_5_popular = [{"stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']} for p in top_5_popular]
+    result = []
+    for key, items in groupby(top_5_popular, key=lambda x: x["stock"].product.name):
+        result.append({"product": key, "sum": sum([item["sum"] for item in items])})
+
+    result = sorted(result, key=itemgetter("sum"), reverse=True)[:5]
+        
     # 4. Top 5 least popular products
     top_5_least_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('sum')[:5]
-    top_5_least_popular = [{
-        "stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']
-    } for p in top_5_least_popular]
+
+    top_5_least_popular = [{"stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']} for p in top_5_least_popular]
+    result_least = []
+    for key, items in groupby(top_5_least_popular, key=lambda x: x["stock"].product.name):
+        result_least.append({"product": key, "sum": sum([item["sum"] for item in items])})
+
+    result_least = sorted(result_least, key=itemgetter("sum"), reverse=False)[:5]
     # 5. Top 5 suppliers by rating
     top_5_suppliers = Supplier.objects.all().order_by('-rating')[:5]
 
     context = {
         'total_amount': total_amount,
         'average_usage': average_usage,
-        'top_5_popular': top_5_popular,
-        'top_5_least_popular': top_5_least_popular,
+        'top_5_popular': result,
+        'top_5_least_popular': result_least,
         'top_5_suppliers': top_5_suppliers,
         **raw_query(request)
     }

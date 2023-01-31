@@ -30,10 +30,11 @@
           <td>{{ supplier.payment_method.name }}</td>
           <td>{{ supplier.delivery_method.name }}</td>
           <td>
-            {% for product in supplier.products.all %}
-              {{ product.name }},
+            {% for supplierproduct in supplier.supplierproduct_set.all %}
+              {{ supplierproduct.product.name }},
             {% endfor %}
           </td>
+          
           <td>
             <a href="{% url 'supplier_update' supplier.pk %}">Edit</a>
             <a href="{% url 'supplier_delete' supplier.pk %}">Delete</a>

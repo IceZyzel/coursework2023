@@ -4,7 +4,7 @@
 
 <form method="POST" action="{% url 'cooker_product' %}">
     {% csrf_token %}
-    <label for="stock">Select Stock:</label>
+    <label for="stock">Select Product:</label>
     <select name="stock" id="stock">
       {% for stock in stocks %}
         <option value="{{ stock.id }}">{{ stock.product.name }} - {{stock.amount}}</option>

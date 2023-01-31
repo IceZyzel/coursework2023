@@ -62,7 +62,7 @@
       <tbody>
         {% for product in top_5_popular %}
         <tr>
-          <td>{{ product.stock.product.name }}</td>
+          <td>{{ product.product}}</td>
           <td>{{ product.sum }}</td>
         </tr>
       {% endfor %}
@@ -80,7 +80,7 @@
       <tbody>
         {% for product in top_5_least_popular %}
         <tr>
-          <td>{{ product.stock.product.name }}</td>
+          <td>{{ product.product}}</td>
           <td>{{ product.sum }}</td>
         </tr>
       {% endfor %}
