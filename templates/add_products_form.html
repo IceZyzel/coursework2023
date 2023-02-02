@@ -5,10 +5,11 @@
         {{ form.as_p }}
         <input type="submit" value="Create">
     </form>
+    <h1></h1>
     <div class="products">
-        <a href={% url 'add_create_supplies' supplier_id %}>
-            <input type="button" value="Add product" />
-        </a>
+        <button class="add-product-button">
+            <a href={% url 'add_create_supplies' supplier_id %}>Add product</a>
+        </button>
         <div class="added_products">
             {% for product in products %}
                 {{ product }}
