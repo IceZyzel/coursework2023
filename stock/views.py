@@ -304,7 +304,7 @@ class CookerProductView(FormView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             all_amount_of_product = StockProduct.objects.filter(product=stock.product).aggregate(sum=models.Sum('amount'))["sum"]
             print(all_amount_of_product)
-            if all_amount_of_product - amount < all_amount_of_product * 0.95:
+            if all_amount_of_product - amount < all_amount_of_product * 0.05:
                 automatic_buy(request, stock)
 
         return super().post(self, request, *args, **kwargs)
