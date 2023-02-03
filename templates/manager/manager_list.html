@@ -12,6 +12,7 @@
             <th>Last Name</th>
             <th>Surname</th>
             <th>Phone</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,8 +23,8 @@
             <td>{{ manager.last_name }}</td>
             <td>{{ manager.surname }}</td>
             <td>{{ manager.phone }}</td>
-            <td><a href="{% url 'update_manager' manager.pk %}">Edit</a></td>
-            <td><a href="{% url 'delete_manager' manager.pk %}">Delete</a></td>
+            <td><a href="{% url 'update_manager' manager.pk %}">Edit</a>
+            <a href="{% url 'delete_manager' manager.pk %}">Delete</a></td>
         </tr>
         {% endfor %}
     </tbody>

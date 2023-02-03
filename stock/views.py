@@ -192,7 +192,7 @@ def supplie_create_view(request, supplier_id: int):
             p.save()
         request.session["products"] = []
         request.session.save()
-        return redirect("supplier")
+        return redirect("supplies")
     context["form"] = form
     return render(request, 'add_products_form.html', context)
 
@@ -368,16 +368,8 @@ def statistics_view(request):
         result.append({"product": key, "sum": sum([item["sum"] for item in items])})
 
     result = sorted(result, key=itemgetter("sum"), reverse=True)[:5]
-        
-    # 4. Top 5 least popular products
-    top_5_least_popular = StockHistory.objects.all().values('stock').annotate(sum=Sum('amount')).order_by('sum')[:5]
-
-    top_5_least_popular = [{"stock": StockProduct.objects.get(id=p['stock']), "sum": p['sum']} for p in top_5_least_popular]
-    result_least = []
-    for key, items in groupby(top_5_least_popular, key=lambda x: x["stock"].product.name):
-        result_least.append({"product": key, "sum": sum([item["sum"] for item in items])})
-
-    result_least = sorted(result_least, key=itemgetter("sum"), reverse=False)[:5]
+    #4. top 5 unpopular products
+    result1 = sorted(result, key=itemgetter("sum"), reverse=False)[:5]
     # 5. Top 5 suppliers by rating
     top_5_suppliers = Supplier.objects.all().order_by('-rating')[:5]
 
@@ -385,7 +377,7 @@ def statistics_view(request):
         'total_amount': total_amount,
         'average_usage': average_usage,
         'top_5_popular': result,
-        'top_5_least_popular': result_least,
+        'top_5_least_popular': result1,
         'top_5_suppliers': top_5_suppliers,
         **raw_query(request)
     }

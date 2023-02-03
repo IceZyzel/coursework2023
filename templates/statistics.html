@@ -35,6 +35,23 @@
 
     <h1>Product Statistics</h1>
 
+    <h2>Total amount of each product</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in top_5_popular %}
+        <tr>
+          <td>{{ item.product}}</td>
+          <td>{{ item.sum }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     <h2>Average Usage of Each Product</h2>
     <table>
       <thead>
