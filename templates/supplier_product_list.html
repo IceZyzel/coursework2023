@@ -20,6 +20,7 @@
           <td>{{ supplier_product.price }}</td>
           <td>
             <a href="{% url 'supplier_product_update' supplier_product.pk %}">Edit</a>
+            <a href="{% url 'supplier_product_delete' supplier_product.pk %}">Delete</a>
           </td>
         </tr>
       {% endfor %}

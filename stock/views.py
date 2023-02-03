@@ -446,12 +446,15 @@ class SupplierProductCreateView(CreateView):
     form_class = SupplierrProductForm
     success_url = '/supplier_products/'
 
-
 class SupplierProductUpdateView(UpdateView):
-    model = SuppliedProduct
+    model = SupplierProduct
     template_name = 'form.html'
     form_class = SupplierrProductForm
     success_url = '/supplier_products/'
+def delete_supplier_product(request, pk):
+    supplier_product = SupplierProduct.objects.get(pk=pk)
+    supplier_product.delete()
+    return redirect('supplier_product_list')
 
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
